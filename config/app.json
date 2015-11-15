@@ -1,0 +1,10 @@
+{
+	"app_name": "order server",
+	"base_url": "http://localhost:8081",
+	"port": 8081,
+	"verbose": true,
+	"static_dir": "static",
+	"view_dir": "views",
+	"database": "sqlite3",
+	"database_conn": "sqlite3:///order.sqlite3"
+}

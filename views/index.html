@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head lang="pt">
+	    <meta charset="UTF-8">
+	    <title>Relat&oacuterio</title>
+		<link href="/static/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<table>
+		    <tr>
+		        <th>
+		            Documento
+		        </th>
+				<th>
+		            Nome
+		        </th>
+				<th>
+		            Valor
+		        </th>
+				<th>
+		            Horário
+		        </th>
+				<th>
+		            Terminal
+		        </th>
+		    </tr>
+		    {{range $k,$v:=.List}}
+		    <tr>
+		        <td>
+		            {{$v.Documento}}
+		        </td>
+		        <td>
+		            {{$v.Nome}}
+		        </td>
+				<td>
+		            R$ {{$v.Valpag}}
+		        </td>
+		        <td>
+		            {{$v.Datapag}}
+		        </td>
+				<td>
+		            {{$v.Terminal}}
+		        </td>
+		    </tr>
+		    {{end}}
+		</table>
+	</body>
+</html>
