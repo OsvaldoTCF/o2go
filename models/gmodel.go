@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Gmodel struct {
+type Model struct {
     ID        uint `gorm:"primary_key"`
     CreatedAt time.Time
     UpdatedAt time.Time
@@ -14,5 +14,5 @@ type Gmodel struct {
 }
 
 func init() {
-	utron.RegisterModels(&Gmodel{})
+	utron.RegisterModels(&Model{})
 }

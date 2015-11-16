@@ -7,9 +7,11 @@ import (
 )
 
 type Order struct {
-	Gmodel 
+	Model	`schema:"-"`
+	Supplier		Supplier
 	SupplierId uint `schema:"-" sql:"type:integer REFERENCES Suppliers(id)"`
 	SponsorId uint  `schema:"-" sql:"type:integer REFERENCES Sponsors(id)"`
+	Sponsor  Sponsor
 	Valor     float32   `schema:"valor" sql:"type:numeric(7,2);not null"`
 	DueDateBase    time.Time `schema: "vencto" sql:"not null;DEFAULT:current_timestamp"`
 	OrderItems	[]OrderItem 

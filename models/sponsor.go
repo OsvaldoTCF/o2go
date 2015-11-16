@@ -7,11 +7,11 @@ import (
 )
 
 type Sponsor struct {
-	Gmodel  `schema: "-"`
+	Model	`schema:"-"`
 	Name		  string `schema: "name";sql:"type:varchar(100);not null"`
-	PhoneExtension  uint  `schema: "phonextension";sql:not null"`
+	PhoneExt  uint  `schema: "phonext";sql:not null"` // Phone Extension
 	Note       string  `schema: "note";sql:"type:varchar(250);DEFAULT:''"`
-    Emails    []Email 
+    Emails    []EmailSponsor 
 }
 
 func init() {
