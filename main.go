@@ -3,8 +3,7 @@ package main
 
 import (
 	"github.com/gernest/utron"
-	_ "order/controllers"
-	_ "order/models"
+  _ "github.com/OsvaldoTCF/o2go/models"
 )
 
 func main() {

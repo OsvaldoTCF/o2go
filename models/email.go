@@ -3,14 +3,13 @@ package models
 
 import (
 	"github.com/gernest/utron"
-	//"time"
+	"time"
 )
 
 type Email struct {
-    ID      int
-    SupplierID  int     `sql:"index"` // Foreign key (belongs to), tag `index` will create index for this field when using AutoMigrate
+    ID      uint
+    SupplierID  uint `schema:"-" sql:"type:integer REFERENCES Suppliers(id)"`
     Email   string  `sql:"type:varchar(100);unique_index"` // Set field's sql type, tag `unique_index` will create unique index
-    Subscribed bool
 	CreatedAt time.Time `schema:"-"`
     UpdatedAt time.Time `schema:"-"`
     DeletedAt time.Time `schema:"-"`
