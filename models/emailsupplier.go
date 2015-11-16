@@ -8,7 +8,7 @@ import (
 
 type EmailSupplier struct {
 	Model	`schema:"-"`
-    SupplierID  uint `schema:"-" sql:"type:integer REFERENCES Suppliers(id)"`
+    SupplierID  uint `schema:"-" gorm:"primary_key" sql:"type:integer REFERENCES Suppliers(id)"`
     Email   string  `sql:"type:varchar(100);unique_index"` // Set field's sql type, tag `unique_index` will create unique index
 }
 
