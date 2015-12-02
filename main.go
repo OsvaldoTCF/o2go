@@ -2,10 +2,11 @@
 package main
 
 import (
+	_ "github.com/OsvaldoTCF/order2go/controllers"
+	_ "github.com/OsvaldoTCF/order2go/models"
 	"github.com/gernest/utron"
-  _ "github.com/OsvaldoTCF/o2go/models"
 )
 
 func main() {
-	utron.Run()
+	utron.RunTLS()
 }

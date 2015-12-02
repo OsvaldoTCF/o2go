@@ -1,10 +1,10 @@
 {
 	"app_name": "O2Go - Order Application with GO",
-	"base_url": "http://localhost:8081",
+	"base_url": "https://localhost:8081",
 	"port": 8081,
 	"verbose": true,
 	"static_dir": "static",
 	"view_dir": "views",
 	"database": "postgres",
-	"database_conn": "postgres://o2godb:o2gopass@localhost/o2godb"
+	"database_conn": "postgres://postgres:pg1010aa@localhost/asura"
 }

@@ -20,7 +20,7 @@ var once sync.Once
 
 func GetWatcherInstance() *watcher {
 	once.Do(func() {
-		instance = &watcher{}
+		instance = &watcher{watchers: make(map[int]*state)}
 	})
 
 	return instance
@@ -36,6 +36,20 @@ func (w *watcher) IsOpen(term int) (bool, error) {
 		return val.isOpen, nil
 	} else {
 		return false, errors.New("terminal not found")
+	}
+}
+
+func (w *watcher) GetOpenTime(term int) (op time.Time, err error) {
+	if b, e := w.IsOpen(term); e != nil {
+		return time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), errors.New("terminal not opened")
+	} else {
+		if !b {
+			err = errors.New("terminal already close")
+		} else {
+			err = nil
+		}
+		op = w.watchers[term].openTime
+		return
 	}
 }
 
