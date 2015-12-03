@@ -8,5 +8,5 @@ import (
 )
 
 func main() {
-	utron.RunTLS()
+	utron.Run()
 }

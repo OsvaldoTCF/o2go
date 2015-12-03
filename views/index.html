@@ -1,226 +1,243 @@
-﻿<!DOCTYPE html>
-<html lang="pt-br">
-<head>
- <meta charset="utf-8">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <title>CRUD com Bootstrap 3</title>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Order2Go</title>
+        <meta charset="UTF-8">      
+        <meta name="viewport" content="width=device-width, initial-scale=1">  
+        <link rel="stylesheet" href="static/css/jquery-ui.min.css">
+        <link rel="stylesheet" href="static/css/bootstrap-combined.min.css">
+        <link rel="stylesheet" href="static/css/primeui-2.1-min.css">
+        <style type="text/css">
+            body,
+            .ui-widget {
+                font-family: Arial;
+                font-size: 13px;
+            }    
+        </style>
+        <script type="text/javascript" src="static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="static/js/bootstrap.js"></script>
+        <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="static/js/primeui-2.1-min.js"></script>
+        <script type="text/javascript" src="static/js/knockout.js"></script>
+    </head>
+    <body>        
+        <div class="navbar">
+            <div class="navbar-inner">
+                <a class="brand" href="#">Order2Go</a>
+            </div>
+        </div>
+        <div id="main" class="container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td><b>Id</b></td>
+                        <td><b>Supplier</b></td>
+                        <td><b>Phone Number</b></td>
+                        <td><b>Note</b></td>
+                        <td><b>Options</b></td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: suppliers">
+                    <tr>
+                        <td><p><b data-bind="text: id"></b></p></td>
+                        <td><p><b data-bind="text: name"></b></p></td>
+                        <td><p data-bind="text: phone"></p></td>
+                        <td><p data-bind="text: note"></p></td>
+                        <td>
+                            <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
+                            <button data-bind="click: $parent.remove" class="btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>                
+            </table>
+            <button data-bind="click: beginAdd" class="btn">Add Supplier</button>
+        </div>    
+        <div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="addDialogLabel">Add Supplier</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <div class="controls">
+                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier's name" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputPhone">Phone</label>
+                        <div class="controls">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputNote">Note</label>
+                        <div class="controls">
+                            <input data-bind="value: note" type="text" id="inputNote" placeholder="Note" style="width: 300px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-bind="click: addSupplier" class="btn btn-primary">Add Supplier</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+        </div>         
+        <div id="edit" class="modal fade" tabindex="=1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="editDialogLabel">Update Supplier</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <div class="controls">
+                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier Name" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputDescription">Phone</label>
+                        <div class="controls">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputNote">Note</label>
+                        <div class="controls">
+                            <input data-bind="value: note" type="text" id="inputNote" placeholder="Note" style="width: 300px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-bind="click:editSupplier" class="btn btn-primary">Update Supplier</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+        </div>           
+        <script type="text/javascript">    
+            function SuppliersViewModel() {
+                var self = this;
+                self.suppliers = ko.observableArray();
+                self.supsURI = '/fornecedores';
 
- <link href="css/bootstrap.min.css" rel="stylesheet">
- <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
+                self.ajax = function(uri, method, data) {
+                    var request = {
+                        url: uri,
+                        type: method,
+                        cache: false,
+                        dataType: 'json',
+                        contentType: "application/json",
+                        accepts: "application/json",
+                        crossDomain: true,
+                        data: JSON.stringify(data),
+                        error: function(jqXHR) {
+                            console.log("ajax error " + jqXHR.status);
+                        }
+                    };
+                    return $.ajax(request);
+                }
 
- <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-   <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-     <span class="sr-only">Toggle navigation</span>
-     <span class="icon-bar"></span>
-     <span class="icon-bar"></span>
-     <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#">Web Dev Academy</a>
-   </div>
-   <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav navbar-right">
-     <li><a href="#">In&iacute;cio</a></li>
-     <li><a href="#">Op&ccedil;&oacute;es</a></li>
-     <li><a href="#">Perfil</a></li>
-     <li><a href="#">Ajuda</a></li>
-    </ul>
-   </div>
-  </div>
- </nav>
+                self.ajax(self.supsURI,'GET').done(function(data) {
+                    for (var i = 0; i < data.Length; i++) {
+                        self.suppliers.push({
+                            id: ko.observable(data.Suppliers[i].ID),
+                            name: ko.observable(data.Suppliers[i].Name),
+                            phone: ko.observable(data.Suppliers[i].PhoneNumber),
+                            note: ko.observable(data.Suppliers[i].Note)
+                        });
+                    }
+                });
 
- <div id="main" class="container-fluid" style="margin-top: 50px">
- 
- 	<div id="top" class="row">
-		<div class="col-sm-3">
-			<h2>Itens</h2>
-		</div>
-		<div class="col-sm-6">
-			
-			<div class="input-group h2">
-				<input name="data[search]" class="form-control" id="search" type="text" placeholder="Pesquisar Itens">
-				<span class="input-group-btn">
-					<button class="btn btn-primary" type="submit">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-				</span>
-			</div>
-			
-		</div>
-		<div class="col-sm-3">
-			<a href="add.html" class="btn btn-primary pull-right h2">Novo Item</a>
-		</div>
-	</div> <!-- /#top -->
- 
- 
- 	<hr />
- 	<div id="list" class="row">
-	
-	<div class="table-responsive col-md-12">
-		<table class="table table-striped" cellspacing="0" cellpadding="0">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Header 1</th>
-					<th>Header 2</th>
-					<th>Header 3</th>
-					<th class="actions">Ações</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>1001</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1002</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1003</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1004</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1005</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1006</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1007</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1008</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1009</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-				<tr>
-					<td>1010</td>
-					<td>Lorem ipsum dolor sit amet, consectetur adipiscing</td>
-					<td>Jes</td>
-					<td>01/01/2015</td>
-					<td class="actions">
-						<a class="btn btn-success btn-xs" href="view.html">Visualizar</a>
-						<a class="btn btn-warning btn-xs" href="edit.html">Editar</a>
-						<a class="btn btn-danger btn-xs"  href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	
-	</div> <!-- /#list -->
-	
-	<div id="bottom" class="row">
-		<div class="col-md-12">
-			<ul class="pagination">
-				<li class="disabled"><a>&lt; Anterior</a></li>
-				<li class="disabled"><a>1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li class="next"><a href="#" rel="next">Próximo &gt;</a></li>
-			</ul><!-- /.pagination -->
-		</div>
-	</div> <!-- /#bottom -->
- </div> <!-- /#main -->
+                self.beginAdd = function() {
+                    $('#add').modal('show');
+                }
 
-<!-- Modal -->
-<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalLabel">Excluir Item</h4>
-      </div>
-      <div class="modal-body">
-        Deseja realmente excluir este item?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Sim</button>
-	<button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>
-      </div>
-    </div>
-  </div>
-</div>
+                self.add = function(supplier){
+                    self.ajax(self.supsURI, 'POST', supplier).done(function(data) {
+                        self.suppliers.push({
+                            id: ko.observable(data.ID),
+                            name: ko.observable(data.Name),
+                            phone: ko.observable(data.PhoneNumber),
+                            note: ko.observable(data.Note)
+                        });
+                    });
+                }
 
- <script src="js/jquery.min.js"></script>
- <script src="js/bootstrap.min.js"></script>
-</body>
+                self.beginEdit = function(supplier) {
+                    editSupplierViewModel.setSupplier(supplier);
+                    $('#edit').modal('show');
+                }
+
+                self.edit = function(supplier, data) {
+                    self.ajax(self.supsURI+'/'+supplier.id(), 'PUT', data).done(function(res) {
+                        self.updateSupplier(supplier, res);
+                    });
+                }
+                self.updateSupplier = function(supplier, newSupplier) {
+                    var i = self.suppliers.indexOf(supplier);
+                    self.suppliers()[i].id(newSupplier.ID);
+                    self.suppliers()[i].name(newSupplier.Name);
+                    self.suppliers()[i].phone(newSupplier.PhoneNumber);
+                    self.suppliers()[i].note(newSupplier.Note);
+                }
+
+                self.remove = function(supplier) {
+                    self.ajax(self.supsURI+'/'+supplier.id(),'DELETE').done(function(){
+                        self.suppliers.remove(supplier);
+                    });                    
+                }                
+            }
+
+            function AddSupplierViewModel() {
+                var self = this;
+                self.name = ko.observable();
+                self.phone = ko.observable();
+                self.note = ko.observable();
+
+                self.addSupplier = function() {
+                    $('#add').modal('hide');
+                    suppliersViewModel.add({
+                        name: self.name(),
+                        note: self.note(),
+                        phone: self.phone()
+                    });
+                    self.name("");
+                    self.phone("");
+                    self.note("");
+                }
+            }
+
+            function EditSupplierViewModel() {
+                var self = this;
+                self.name = ko.observable();
+                self.phone = ko.observable();
+                self.note = ko.observable();
+
+                self.setSupplier = function(supplier) {
+                    self.supplier = supplier;
+                    self.name(supplier.name());
+                    self.phone(supplier.phone());
+                    self.note(supplier.note());
+                    $('edit').modal('show');
+                }
+                self.editSupplier = function() {
+                    $('#edit').modal('hide');
+                    suppliersViewModel.edit(self.supplier, {
+                        name: self.name(),
+                        phone: self.phone() ,
+                        note: self.note()
+                    });
+                }
+            }
+
+            var suppliersViewModel = new SuppliersViewModel();
+            var addSupplierViewModel = new AddSupplierViewModel();
+            var editSupplierViewModel = new EditSupplierViewModel();
+            ko.applyBindings(suppliersViewModel, $('#main')[0]);
+            ko.applyBindings(addSupplierViewModel, $('#add')[0]);
+            ko.applyBindings(editSupplierViewModel, $('#edit')[0]);
+        </script>
+    </body>
 </html>
