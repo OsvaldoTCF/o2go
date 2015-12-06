@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/OsvaldoTCF/order2go/models"
-	_ "github.com/OsvaldoTCF/order2go/utils"
 	"github.com/gernest/utron"
 	"net/http"
 	"strconv"
@@ -25,25 +24,17 @@ func (a *SupplierAction) Get() {
 		id, err = strconv.Atoi(vars)
 	}
 
-	//	s := models.Supplier{}
-	//	s.Name = "KJ Mouses"
-	//	s.PhoneNumber = "9 8765-4321"
-	//	s.Note = "Trustworthy"
-	//	a.Ctx.DB.Create(&s)
-
 	if (err == nil) && ok {
 		a.Ctx.DB.Where("id = ?", id).Find(&suppliers)
 		for i, _ := range suppliers {
 			a.Ctx.DB.Where("supplier_id = ?", suppliers[i].ID).Order("id").Find(&emails)
 			suppliers[i].Emails = emails
-			suppliers[i].SetEmailsLength()
 		}
 	} else {
 		a.Ctx.DB.Order("id").Limit(20).Find(&suppliers)
 		for i, _ := range suppliers {
 			a.Ctx.DB.Where("supplier_id = ?", suppliers[i].ID).Order("id").Find(&emails)
 			suppliers[i].Emails = emails
-			suppliers[i].SetEmailsLength()
 		}
 	}
 
@@ -69,22 +60,11 @@ func (a *SupplierAction) Post() {
 
 	var m map[string]interface{}
 	dec.Decode(&m)
-	//	ems, _ := m["emails"].([]interface{})
 
 	sup := new(models.Supplier)
 	sup.Name, _ = m["name"].(string)
 	sup.Note, _ = m["note"].(string)
 	sup.PhoneNumber, _ = m["phone"].(string)
-	//	sup.Emails = []models.EmailSupplier{}
-
-	//	for _, val := range ems {
-	//		v := val.(map[string]interface{})
-	//		s, _ := v["email"]
-	//		aux := models.EmailSupplier{
-	//			Email: s.(string),
-	//		}
-	//		sup.Emails = append(sup.Emails, aux)
-	//	}
 
 	a.Ctx.DB.Create(&sup)
 
@@ -110,7 +90,6 @@ func (a *SupplierAction) Put() {
 
 		var m map[string]interface{}
 		dec.Decode(&m)
-		ems, _ := m["emails"].([]interface{})
 
 		sup := models.Supplier{}
 
@@ -119,16 +98,6 @@ func (a *SupplierAction) Put() {
 		sup.Name, _ = m["name"].(string)
 		sup.Note, _ = m["note"].(string)
 		sup.PhoneNumber, _ = m["phone"].(string)
-		sup.Emails = []models.EmailSupplier{}
-
-		for _, val := range ems {
-			v := val.(map[string]interface{})
-			s, _ := v["email"]
-			aux := models.EmailSupplier{
-				Email: s.(string),
-			}
-			sup.Emails = append(sup.Emails, aux)
-		}
 
 		a.Ctx.DB.Save(&sup)
 

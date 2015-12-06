@@ -5,7 +5,6 @@ import (
 	"github.com/gernest/utron"
 	"github.com/gorilla/schema"
 	"net/http"
-	_ "strconv"
 )
 
 var decoder = schema.NewDecoder()
@@ -27,8 +26,13 @@ func (a *GeneralAction) WrongMethod() {
 	a.Ctx.Write(utils.BuildReturnMessage(utils.OPERATION_NOT_ALLOWED))
 }
 
-func (a *GeneralAction) Home() {
+func (a *GeneralAction) RenderSupplier() {
 	a.Ctx.Template = "index"
+	a.Ctx.HTML()
+}
+
+func (a *GeneralAction) RenderEmailSupplier() {
+	a.Ctx.Template = "editmails"
 	a.Ctx.HTML()
 }
 
@@ -36,7 +40,9 @@ func NewGeneralAction() *GeneralAction {
 	return &GeneralAction{
 		Routes: []string{
 			"post,put,delete;/;WrongMethod",
-			"get;/;Home",
+			"get;/;RenderSupplier",
+			"get;/supplier;RenderSupplier",
+			"get;/emailsupplier;RenderEmailSupplier",
 		},
 	}
 }
