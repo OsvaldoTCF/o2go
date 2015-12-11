@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Order2Go</title>
+        <meta charset="UTF-8">      
+        <meta name="viewport" content="width=device-width, initial-scale=1">  
+        <link rel="stylesheet" href="static/css/jquery-ui.min.css">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/primeui-2.1-min.css">
+        <style type="text/css">
+            body,
+            .ui-widget {
+                font-family: Arial;
+                font-size: 13px;
+            }    
+        </style>
+        <script type="text/javascript" src="static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="static/js/bootstrap.js"></script>
+        <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="static/js/primeui-2.1-min.js"></script>
+        <script type="text/javascript" src="static/js/knockout.js"></script>
+    </head>
+    <body>        
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Order2Go</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/supplier">Supplier</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>  
+        <div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="addDialogLabel">Add Email</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="inputEmail">Email</label>
+                                <div class="controls">
+                                    <input data-bind="value: email" type="text" id="inputEmail" placeholder="Supplier's email" style="width: 300px;">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-bind="click: addEmail" class="btn btn-primary">Add Email</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>         
+        <div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="editDialogLabel">Update Email</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="inputEmail">Email</label>
+                                <div class="controls">
+                                    <input data-bind="value: email" type="text" id="inputSupplier" placeholder="Supplier's email" style="width: 300px;">
+                                </div>
+                            </div>                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-bind="click:editEmail" class="btn btn-primary">Update Email</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="main" class="container">
+            <h3 data-bind="text: supplier"></h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td><b>Id</b></td>
+                        <td><b>Email</b></td>
+                        <td><b>Options</b></td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: emails">
+                    <tr>
+                        <td><p><b data-bind="text: id"></b></p></td>
+                        <td><p data-bind="text: email"></p></td>
+                        <td>
+                            <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
+                            <button data-bind="click: $parent.remove" class="btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>                
+            </table>
+            <button data-bind="click: beginAdd" class="btn">Add Email</button>
+        </div>
+        <script type="text/javascript">    
+            $.extend({
+              getUrlVars: function(){
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for(var i = 0; i < hashes.length; i++)
+                {
+                  hash = hashes[i].split('=');
+                  vars.push(hash[0]);
+                  vars[hash[0]] = hash[1];
+                }
+                return vars;
+              },
+              getUrlVar: function(name){
+                return $.getUrlVars()[name];
+              }
+            });
+
+            var sup = $.getUrlVar('supplier');
+
+            function EmailsViewModel() {
+                var self = this;
+                self.emails = ko.observableArray();
+                self.supplier = ko.observable();
+                self.emlsURI = '/emailfornecedor';
+
+                self.ajax = function(uri, method, data) {
+                    var request = {
+                        url: uri,
+                        type: method,
+                        cache: false,
+                        dataType: 'json',
+                        contentType: "application/json",
+                        accepts: "application/json",
+                        crossDomain: true,
+                        data: JSON.stringify(data),
+                        error: function(jqXHR) {
+                            console.log("ajax error " + jqXHR.status);
+                        }
+                    };
+                    return $.ajax(request);
+                }
+
+                self.ajax(self.emlsURI+"?supplier="+sup,'GET').done(function(data) {
+                    self.supplier(data.Supplier)
+                    for (var i = 0; i < data.Length; i++) {                        
+                        self.emails.push({
+                            id: ko.observable(data.Emails[i].ID),
+                            email: ko.observable(data.Emails[i].Email),
+                            supp: ko.observable(data.Emails[i].SupplierID)
+                        });  
+                    }
+                });
+
+                self.beginAdd = function() {
+                    $('#add').modal('show');
+                }
+
+                self.add = function(email){
+                    self.ajax(self.emlsURI, 'POST', email).done(function(data) {
+                        self.emails.push({
+                            id: ko.observable(data.ID),
+                            email: ko.observable(data.Email),
+                            supp: ko.observable(data.SupplierID)
+                        });
+                    });
+                }
+
+                self.beginEdit = function(email) {
+                    editEmailViewModel.setEmail(email);
+                    $('#edit').modal('show');
+                }
+
+                self.edit = function(email, data) {
+                    self.ajax(self.emlsURI+'/'+email.id(), 'PUT', data).done(function(res) {
+                        self.updateEmail(email, res);
+                    });
+                }
+                self.updateEmail = function(email, newEmail) {
+                    var i = self.emails.indexOf(email);
+                    self.emails()[i].id(newEmail.ID);
+                    self.emails()[i].email(newEmail.Email);
+                    self.emails()[i].supp(newEmail.SupplierID);
+                }
+
+                self.remove = function(email) {
+                    self.ajax(self.emlsURI+'/'+email.id(),'DELETE').done(function(){
+                        self.emails.remove(email);
+                    });                    
+                }                
+            }
+
+            function AddEmailViewModel(supplier) {
+                var self = this;
+                self.email = ko.observable();
+                self.supp = ko.observable(supplier);
+
+                self.addEmail = function() {
+                    $('#add').modal('hide');
+                    emailsViewModel.add({
+                        email: self.email(),
+                        supplier: self.supp()
+                    });
+                    self.email("");
+                }
+            }
+
+            function EditEmailViewModel() {
+                var self = this;
+                self.email = ko.observable();
+
+                self.setEmail = function(email) {
+                    self.eml = email;
+                    self.email(email.email());
+                    $('edit').modal('show');
+                }
+                self.editEmail = function() {
+                    $('#edit').modal('hide');
+                    emailsViewModel.edit(self.eml, {
+                        email: self.email()
+                    });
+                }
+            }
+
+            var emailsViewModel = new EmailsViewModel();
+            var addEmailViewModel = new AddEmailViewModel(sup);
+            var editEmailViewModel = new EditEmailViewModel();
+            ko.applyBindings(emailsViewModel, $('#main')[0]);
+            ko.applyBindings(addEmailViewModel, $('#add')[0]);
+            ko.applyBindings(editEmailViewModel, $('#edit')[0]);
+        </script>
+    </body>
+</html>
