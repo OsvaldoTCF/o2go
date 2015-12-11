@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/OsvaldoTCF/order2go/models"
 	"github.com/gernest/utron"
 	"net/http"
@@ -46,12 +45,7 @@ func (a *SupplierAction) Get() {
 		suppliers,
 	}
 
-	rtn, _ := json.Marshal(data)
-
-	a.Ctx.Set(http.StatusOK)
-	a.Ctx.Write(rtn)
-
-	fmt.Println(string(rtn[:]))
+	a.RenderJSON(data, http.StatusOK)
 }
 
 func (a *SupplierAction) Post() {
@@ -68,11 +62,7 @@ func (a *SupplierAction) Post() {
 
 	a.Ctx.DB.Create(&sup)
 
-	rtn, _ := json.Marshal(sup)
-
-	a.Ctx.Set(http.StatusCreated)
-	a.Ctx.Write(rtn)
-	fmt.Println(string(rtn[:]))
+	a.RenderJSON(sup, http.StatusOK)
 }
 
 func (a *SupplierAction) Put() {
@@ -101,9 +91,7 @@ func (a *SupplierAction) Put() {
 
 		a.Ctx.DB.Save(&sup)
 
-		rtn, _ := json.Marshal(sup)
-		a.Ctx.Write(rtn)
-		fmt.Println(string(rtn[:]))
+		a.RenderJSON(sup, http.StatusOK)
 	}
 }
 

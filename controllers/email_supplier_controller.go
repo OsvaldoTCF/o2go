@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/OsvaldoTCF/order2go/models"
 	"github.com/gernest/utron"
 	"net/http"
@@ -32,8 +31,6 @@ func (a *EmailSupplierAction) Get() {
 		sup, err2 = strconv.Atoi(par[0])
 	}
 
-	var rtn []byte
-
 	if (err1 == nil) && ok1 {
 		a.Ctx.DB.Where("id = ?", id).Find(&emails)
 		var s models.Supplier
@@ -50,7 +47,7 @@ func (a *EmailSupplierAction) Get() {
 			emails,
 		}
 
-		rtn, _ = json.Marshal(data)
+		a.RenderJSON(data, http.StatusOK)
 	} else if (err2 == nil) && ok2 {
 		a.Ctx.DB.Where("supplier_id = ?", sup).Order("id").Limit(20).Find(&emails)
 		var s models.Supplier
@@ -67,7 +64,7 @@ func (a *EmailSupplierAction) Get() {
 			emails,
 		}
 
-		rtn, _ = json.Marshal(data)
+		a.RenderJSON(data, http.StatusOK)
 	} else {
 		a.Ctx.DB.Order("id").Limit(20).Find(&emails)
 
@@ -79,13 +76,8 @@ func (a *EmailSupplierAction) Get() {
 			emails,
 		}
 
-		rtn, _ = json.Marshal(data)
+		a.RenderJSON(data, http.StatusOK)
 	}
-
-	a.Ctx.Set(http.StatusOK)
-	a.Ctx.Write(rtn)
-
-	fmt.Println(string(rtn[:]))
 }
 
 func (a *EmailSupplierAction) Post() {
@@ -103,11 +95,7 @@ func (a *EmailSupplierAction) Post() {
 
 	a.Ctx.DB.Create(&eml)
 
-	rtn, _ := json.Marshal(eml)
-
-	a.Ctx.Set(http.StatusCreated)
-	a.Ctx.Write(rtn)
-	fmt.Println(string(rtn[:]))
+	a.RenderJSON(eml, http.StatusOK)
 }
 
 func (a *EmailSupplierAction) Put() {
@@ -134,9 +122,7 @@ func (a *EmailSupplierAction) Put() {
 
 		a.Ctx.DB.Save(&eml)
 
-		rtn, _ := json.Marshal(eml)
-		a.Ctx.Write(rtn)
-		fmt.Println(string(rtn[:]))
+		a.RenderJSON(eml, http.StatusOK)
 	}
 }
 

@@ -31,11 +31,6 @@ func (a *GeneralAction) Home() {
 	a.Ctx.HTML()
 }
 
-func (a *GeneralAction) RenderEmailSupplier() {
-	a.Ctx.Template = "editmails"
-	a.Ctx.HTML()
-}
-
 func NewGeneralAction() *GeneralAction {
 	return &GeneralAction{
 		Routes: []string{
