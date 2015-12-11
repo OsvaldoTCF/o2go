@@ -1,0 +1,99 @@
+<div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true" data-bind="with: addSupplierViewModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="addDialogLabel">Add Supplier</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <div class="controls">
+                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier's name" style="width: 300px;    ">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputPhone">Phone</label>
+                        <div class="controls">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputNote">Note</label>
+                        <div class="controls">
+                            <input data-bind="value: note" type="text" id="inputNote" placeholder="Note" style="width: 300px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-bind="click: addSupplier" class="btn btn-primary">Add Supplier</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>         
+<div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true" data-bind="with: editSupplierViewModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="editDialogLabel">Update Supplier</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <div class="controls">
+                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier Name" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputDescription">Phone</label>
+                        <div class="controls">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputNote">Note</label>
+                        <div class="controls">
+                            <input data-bind="value: note" type="text" id="inputNote" placeholder="Note" style="width: 300px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-bind="click:editSupplier" class="btn btn-primary">Update Supplier</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div> 
+<div id="main" class="container" data-bind="with: suppliersViewModel">
+    <h3>Suppliers</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td><b>Id</b></td>
+                <td><b>Supplier</b></td>
+                <td><b>Options</b></td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: suppliers">
+            <tr>
+                <td><p><b data-bind="text: id"></b></p></td>
+                <td>
+                  <a href="javascript:;" data-bind="attr: {'href':'#emailsupplier/'+$data.id()}"><p><b data-bind="text: name"></b></p></a>
+                  <p data-bind="text: note"></p>
+                </td>
+                <td><p data-bind="text: phone"></p></td>
+                <td>
+                    <button data-bind="click: $parent.beginEdit" class="btn">Edit</button>
+                    <button data-bind="click: $parent.remove" class="btn">Delete</button>
+                </td>
+            </tr>
+        </tbody>                
+    </table>
+    <button data-bind="click: beginAdd" class="btn">Add Supplier</button>
+</div>
