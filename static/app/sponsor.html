@@ -1,22 +1,22 @@
-<div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true" data-bind="with: $data.addSupplierViewModel">
+<div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true" data-bind="with: $data.addSponsorViewModel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="addDialogLabel">Add Supplier</h3>
+                <h3 id="addDialogLabel">Add Sponsor</h3>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="control-group">
-                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <label class="control-label" for="inputSponsor">Sponsor</label>
                         <div class="controls">
-                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier's name" style="width: 300px;    ">
+                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Sponsor's name" style="width: 300px;    ">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputPhone">Phone</label>
+                        <label class="control-label" for="inputPhone">Phone Extension</label>
                         <div class="controls">
-                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone Extension" style="width: 300px;">
                         </div>
                     </div>
                     <div class="control-group">
@@ -28,31 +28,31 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button data-bind="click: addSupplier" class="btn btn-primary">Add Supplier</button>
+                <button data-bind="click: addSponsor" class="btn btn-primary">Add Sponsor</button>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>
     </div>
 </div>         
-<div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true" data-bind="with: $data.editSupplierViewModel">
+<div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true" data-bind="with: $data.editSponsorViewModel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="editDialogLabel">Update Supplier</h3>
+                <h3 id="editDialogLabel">Update Sponsor</h3>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="control-group">
-                        <label class="control-label" for="inputSupplier">Supplier</label>
+                        <label class="control-label" for="inputSponsor">Sponsor</label>
                         <div class="controls">
-                            <input data-bind="value: name" type="text" id="inputSupplier" placeholder="Supplier Name" style="width: 300px;">
+                            <input data-bind="value: name" type="text" id="inputSponsor" placeholder="Sponsor Name" style="width: 300px;">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputDescription">Phone</label>
+                        <label class="control-label" for="inputDescription">Phone Extension</label>
                         <div class="controls">
-                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone number" style="width: 300px;">
+                            <input data-bind="value: phone" type="text" id="inputPhone" placeholder="Phone Extension" style="width: 300px;">
                         </div>
                     </div>
                     <div class="control-group">
@@ -64,28 +64,28 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button data-bind="click:editSupplier" class="btn btn-primary">Update Supplier</button>
+                <button data-bind="click:editSponsor" class="btn btn-primary">Update Sponsor</button>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>
     </div>
 </div> 
-<div id="main" class="container" data-bind="with: $data.suppliersViewModel">
-    <h3>Suppliers</h3>
+<div id="main" class="container" data-bind="with: $data.sponsorsViewModel">
+    <h3>Sponsors</h3>
     <table class="table table-striped">
         <thead>
             <tr>
                 <td><b>Id</b></td>
-                <td><b>Supplier</b></td>
-                <td><b>Phone Number</b></td>
+                <td><b>Sponsor</b></td>
+                <td><b>Phone Extension</b></td>
                 <td><b>Options</b></td>
             </tr>
         </thead>
-        <tbody data-bind="foreach: suppliers">
+        <tbody data-bind="foreach: sponsors">
             <tr>
                 <td><p><b data-bind="text: id"></b></p></td>
                 <td>
-                  <a href="javascript:;" data-bind="attr: {'href':'#emailsupplier/'+$data.id()}"><p><b data-bind="text: name"></b></p></a>
+                  <a href="javascript:;" data-bind="attr: {'href':'#emailsponsor/'+$data.id()}"><p><b data-bind="text: name"></b></p></a>
                   <p data-bind="text: note"></p>
                 </td>
                 <td><p data-bind="text: phone"></p></td>
@@ -96,5 +96,5 @@
             </tr>
         </tbody>                
     </table>
-    <button data-bind="click: beginAdd" class="btn">Add Supplier</button>
+    <button data-bind="click: beginAdd" class="btn">Add Sponsor</button>
 </div>

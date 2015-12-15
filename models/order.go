@@ -3,7 +3,7 @@ package models
 // Order
 
 import (
-	_ "github.com/gernest/utron"
+	"github.com/gernest/utron"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -23,6 +23,6 @@ type Order struct {
 //	o.Date = o.Date.Format("02/01/2006 15:04:05")
 //}
 
-//func init() {
-//	utron.RegisterModels(&Order{})
-//}
+func init() {
+	utron.RegisterModels(&Order{})
+}

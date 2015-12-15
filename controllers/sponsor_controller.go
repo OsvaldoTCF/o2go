@@ -8,14 +8,14 @@ import (
 	"strconv"
 )
 
-type SupplierAction struct {
+type SponsorAction struct {
 	*utron.BaseController
 	Routes []string
 }
 
-func (a *SupplierAction) Get() {
-	var suppliers []*models.Supplier
-	var emails []models.EmailSupplier
+func (a *SponsorAction) Get() {
+	var sponsors []*models.Sponsor
+	var emails []models.EmailSponsor
 	vars, ok := a.Ctx.Params["id"]
 	var id int
 	var err error = nil
@@ -24,48 +24,50 @@ func (a *SupplierAction) Get() {
 	}
 
 	if (err == nil) && ok {
-		a.Ctx.DB.Where("id = ?", id).Find(&suppliers)
-		for i, _ := range suppliers {
-			a.Ctx.DB.Where("supplier_id = ?", suppliers[i].ID).Order("id").Find(&emails)
-			suppliers[i].Emails = emails
+		a.Ctx.DB.Where("id = ?", id).Find(&sponsors)
+		for i, _ := range sponsors {
+			a.Ctx.DB.Where("Sponsor_id = ?", sponsors[i].ID).Order("id").Find(&emails)
+			sponsors[i].Emails = emails
 		}
 	} else {
-		a.Ctx.DB.Order("id").Limit(20).Find(&suppliers)
-		for i, _ := range suppliers {
-			a.Ctx.DB.Where("supplier_id = ?", suppliers[i].ID).Order("id").Find(&emails)
-			suppliers[i].Emails = emails
+		a.Ctx.DB.Order("id").Limit(20).Find(&sponsors)
+		for i, _ := range sponsors {
+			a.Ctx.DB.Where("sponsor_id = ?", sponsors[i].ID).Order("id").Find(&emails)
+			sponsors[i].Emails = emails
 		}
 	}
 
 	data := struct {
-		Length    int
-		Suppliers []*models.Supplier
+		Length   int
+		Sponsors []*models.Sponsor
 	}{
-		len(suppliers),
-		suppliers,
+		len(sponsors),
+		sponsors,
 	}
 
 	a.RenderJSON(data, http.StatusOK)
 }
 
-func (a *SupplierAction) Post() {
+func (a *SponsorAction) Post() {
 	a.Ctx.Request().ParseForm()
 	dec := json.NewDecoder(a.Ctx.Request().Body)
 
 	var m map[string]interface{}
 	dec.Decode(&m)
 
-	sup := new(models.Supplier)
+	sup := new(models.Sponsor)
 	sup.Name, _ = m["name"].(string)
 	sup.Note, _ = m["note"].(string)
-	sup.PhoneNumber, _ = m["phone"].(string)
+	px, _ := m["phone"].(string)
+	pxt, _ := strconv.Atoi(px)
+	sup.PhoneExt = uint(pxt)
 
 	a.Ctx.DB.Create(&sup)
 
 	a.RenderJSON(sup, http.StatusOK)
 }
 
-func (a *SupplierAction) Put() {
+func (a *SponsorAction) Put() {
 	vars, ok := a.Ctx.Params["id"]
 	var id int
 	var err error = nil
@@ -81,13 +83,15 @@ func (a *SupplierAction) Put() {
 		var m map[string]interface{}
 		dec.Decode(&m)
 
-		sup := models.Supplier{}
+		sup := models.Sponsor{}
 
 		a.Ctx.DB.Where("id = ?", id).Find(&sup)
 
 		sup.Name, _ = m["name"].(string)
 		sup.Note, _ = m["note"].(string)
-		sup.PhoneNumber, _ = m["phone"].(string)
+		px, _ := m["phone"].(string)
+		pxt, _ := strconv.Atoi(px)
+		sup.PhoneExt = uint(pxt)
 
 		a.Ctx.DB.Save(&sup)
 
@@ -95,7 +99,7 @@ func (a *SupplierAction) Put() {
 	}
 }
 
-func (a *SupplierAction) Delete() {
+func (a *SponsorAction) Delete() {
 	vars, ok := a.Ctx.Params["id"]
 	var id int
 	var err error = nil
@@ -104,23 +108,23 @@ func (a *SupplierAction) Delete() {
 	}
 
 	if (err == nil) && ok {
-		a.Ctx.DB.Exec("delete from suppliers where id = ?", id)
+		a.Ctx.DB.Exec("delete from sponsors where id = ?", id)
 	}
 	a.Ctx.Set(http.StatusNoContent)
 }
 
-func NewSupplierAction() *SupplierAction {
-	return &SupplierAction{
+func NewSponsorAction() *SponsorAction {
+	return &SponsorAction{
 		Routes: []string{
-			"get;/fornecedores/{id};Get",
-			"get;/fornecedores;Get",
-			"post;/fornecedores;Post",
-			"put;/fornecedores/{id};Put",
-			"delete;/fornecedores/{id};Delete",
+			"get;/patrocinadores/{id};Get",
+			"get;/patrocinadores;Get",
+			"post;/patrocinadores;Post",
+			"put;/patrocinadores/{id};Put",
+			"delete;/patrocinadores/{id};Delete",
 		},
 	}
 }
 
 func init() {
-	utron.RegisterController(NewSupplierAction())
+	utron.RegisterController(NewSponsorAction())
 }

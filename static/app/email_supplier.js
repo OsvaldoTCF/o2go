@@ -60,6 +60,10 @@ define(function (require) {
           self.doAdd(email,data);
       }
       
+      self.cancel = function(email){
+          self.emails.remove(email);
+      }
+      
       self.doAdd= function(email, data){
           self.ajax(self.emlsURI, 'POST', data).done(function(data) {
               self.emails.remove(email);

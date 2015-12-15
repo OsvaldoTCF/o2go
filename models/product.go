@@ -3,7 +3,7 @@ package models
 // product
 
 import (
-	_ "github.com/gernest/utron"
+	"github.com/gernest/utron"
 	"github.com/jinzhu/gorm"
 	//	"time"
 )
@@ -17,6 +17,6 @@ type Product struct {
 	Unit       string   `schema:"unit" sql:size:3`
 }
 
-//func init() {
-//	utron.RegisterModels(&Product{})
-//}
+func init() {
+	utron.RegisterModels(&Product{})
+}

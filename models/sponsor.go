@@ -3,7 +3,7 @@ package models
 // sponsor
 
 import (
-	_ "github.com/gernest/utron"
+	"github.com/gernest/utron"
 	"github.com/jinzhu/gorm"
 	//"time"
 )
@@ -16,6 +16,6 @@ type Sponsor struct {
 	Emails   []EmailSponsor `schema:"-"`
 }
 
-//func init() {
-//	utron.RegisterModels(&Sponsor{})
-//}
+func init() {
+	utron.RegisterModels(&Sponsor{})
+}
