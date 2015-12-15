@@ -1,4 +1,4 @@
-<div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true" data-bind="with: addSupplierViewModel">
+<div id="add" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="addDialogLabel" aria-hidden="true" data-bind="with: $data.addSupplierViewModel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>         
-<div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true" data-bind="with: editSupplierViewModel">
+<div id="edit" class="modal fade" tabindex="=-1" role="dialog" aria-labelledby="editDialogLabel" aria-hidden="true" data-bind="with: $data.editSupplierViewModel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,13 +70,14 @@
         </div>
     </div>
 </div> 
-<div id="main" class="container" data-bind="with: suppliersViewModel">
+<div id="main" class="container" data-bind="with: $data.suppliersViewModel">
     <h3>Suppliers</h3>
     <table class="table table-striped">
         <thead>
             <tr>
                 <td><b>Id</b></td>
                 <td><b>Supplier</b></td>
+                <td><b>Phone Number</b></td>
                 <td><b>Options</b></td>
             </tr>
         </thead>

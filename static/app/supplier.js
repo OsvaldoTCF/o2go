@@ -3,7 +3,7 @@ define(function (require) {
       ko = require('knockout'),
       bootstrap = require('bootstrap');
 
-  var suppliersViewModel = function() {
+  function SuppliersViewModel() {
       var self = this;
       self.suppliers = ko.observableArray();
       self.supsURI = '/fornecedores';
@@ -70,7 +70,7 @@ define(function (require) {
       }              
   }
   
-  var addSupplierViewModel = function() {
+  function AddSupplierViewModel() {
       var self = this;
       self.name = ko.observable();
       self.phone = ko.observable();
@@ -88,7 +88,7 @@ define(function (require) {
       }
   }
   
-  var editSupplierViewModel = function() {
+  function EditSupplierViewModel() {
       var self = this;
       self.name = ko.observable();
       self.phone = ko.observable();
@@ -109,6 +109,10 @@ define(function (require) {
           });
       }
   }
+  
+  var suppliersViewModel = new SuppliersViewModel(); 
+  var addSupplierViewModel = new AddSupplierViewModel();
+  var editSupplierViewModel = new EditSupplierViewModel();
             
   return {
      suppliersViewModel, 

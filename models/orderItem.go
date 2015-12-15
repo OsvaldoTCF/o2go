@@ -3,7 +3,7 @@ package models
 // Order Item
 
 import (
-	_ "github.com/gernest/utron"
+	"github.com/gernest/utron"
 	//"time"
 )
 
@@ -14,6 +14,6 @@ type OrderItem struct {
 	TotalPrice float32 `schema:"totalprice" sql:"type:numeric(7,2)"`
 }
 
-//func init() {
-//	utron.RegisterModels(&OrderItem{})
-//}
+func init() {
+	utron.RegisterModels(&OrderItem{})
+}

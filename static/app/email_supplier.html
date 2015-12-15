@@ -1,0 +1,25 @@
+<div id="main" class="container" data-bind="with: emailsViewModel">
+    <h3 data-bind="text: supplier"></h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td><b>Id</b></td>
+                <td><b>Email</b></td>
+                <td><b>Options</b></td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: emails">
+            <tr>
+                <td><p><b data-bind="text: id"></b></p></td>
+                <td><input type="text" data-bind="value: email" style="width: 300px;"/></td>
+                <td>
+                    <span data-bind="visible: saved"><button data-bind="click: edit" class="btn">Edit</button></span>
+                    <span data-bind="visible: !saved()"><button data-bind="click: add" class="btn">Save</button></span>
+                    <span data-bind="visible: saved"><button data-bind="click: remove" class="btn">Delete</button></span>
+                    <span data-bind="visible: !saved()"><button data-bind="click: cancel" class="btn">Cancel</button></span>
+                </td>
+            </tr>
+        </tbody>                
+    </table>
+    <button data-bind="click: beginAdd" class="btn">Add Email</button>
+</div>
